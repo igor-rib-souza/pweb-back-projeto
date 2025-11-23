@@ -11,13 +11,13 @@ app.get("/", (req, res) => {
 const start = async () => {
   try {
     await sequelize.authenticate();
-    console.log("🔥 Banco conectado com sucesso!");
+    console.log("Banco conectado com sucesso!");
 
     app.listen(3000, () => {
-      console.log("🚀 Servidor rodando em http://localhost:3000");
+      console.log("Servidor rodando em http://localhost:3000");
     });
   } catch (error) {
-    console.error("❌ Erro ao conectar no banco:", error);
+    console.error("Erro ao conectar no banco:", error);
   }
 };
 
