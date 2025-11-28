@@ -1,27 +1,24 @@
-import express from 'express';
-import { sequelize } from './config/database.js';
-import userRoutes from './routes/userRoutes.js';
+import app from "./app.js";
+import { sequelize } from "./config/database.js";
+import dotenv from "dotenv";
+import { logger } from "./logger/index";
 
-const app = express();
-app.use(express.json());
+dotenv.config();
 
-app.use('/users', userRoutes);
-
-app.get('/', (_req, res) => {
-  res.send('Servidor funcionando!');
-});
+const PORT = process.env.PORT || 3000;
 
 const start = async () => {
   try {
     await sequelize.authenticate();
-    await sequelize.sync(); // Cria as tabelas se ainda não existirem
-    console.log('Banco conectado com sucesso!');
+    await sequelize.sync();
+    logger.info("Banco de dados conectado com sucesso");
 
-    app.listen(3000, () => {
-      console.log('Servidor rodando em http://localhost:3000');
+    app.listen(PORT, () => {
+      logger.info(`Servidor rodando em http://localhost:${PORT}`);
     });
   } catch (error) {
-    console.error('Erro ao conectar no banco:', error);
+    logger.error("Erro ao iniciar servidor:", error);
+    process.exit(1);
   }
 };
 
