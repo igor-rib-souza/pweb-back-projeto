@@ -40,7 +40,7 @@ User.init(
       unique: true,
     },
     cpf: {
-      type: DataTypes.STRING(14),
+      type: DataTypes.STRING(11),
       allowNull: false,
       unique: true,
     },
