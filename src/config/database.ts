@@ -6,7 +6,7 @@ dotenv.config();
 if (!process.env.DB_HOST) throw new Error("DB_HOST não definido");
 if (!process.env.DB_NAME) throw new Error("DB_NAME não definido");
 if (!process.env.DB_USER) throw new Error("DB_USER não definido");
-//if (!process.env.DB_PASSWORD) throw new Error("DB_PASSWORD não definido");
+if (!process.env.DB_PASSWORD) throw new Error("DB_PASSWORD não definido");
 
 export const sequelize = new Sequelize(
   process.env.DB_NAME,
