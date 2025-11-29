@@ -1,7 +1,8 @@
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
-import userRoutes from "./routes/user.routes.js";
+import userRoutes from "./routes/user.routes";
+import teapotRoutes from "./routes/teapot.routes";
 import { notFoundHandler } from "./middlewares/notFound";
 import { errorHandler } from "./middlewares/errorHandler";
 
@@ -16,6 +17,7 @@ app.get("/", (_req, res) => {
 });
 
 app.use("/users", userRoutes);
+app.use("/teapot", teapotRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
