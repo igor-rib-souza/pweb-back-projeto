@@ -5,6 +5,8 @@ import helmet from "helmet";
 import userRoutes from "./routes/user.routes";
 import teapotRoutes from "./routes/teapot.routes";
 import categoryRoutes from "./routes/category.routes";
+import rentalRoutes from "./routes/rental.routes";
+import movieRoutes from "./routes/movie.routes";
 
 import { notFoundHandler } from "./middlewares/notFound";
 import { errorHandler } from "./middlewares/errorHandler";
@@ -22,6 +24,8 @@ app.get("/", (_req, res) => {
 app.use("/users", userRoutes);
 app.use("/category", categoryRoutes)
 app.use("/teapot", teapotRoutes);
+app.use("/rental", rentalRoutes);
+app.use("/movie", movieRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
