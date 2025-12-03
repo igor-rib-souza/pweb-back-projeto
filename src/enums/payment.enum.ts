@@ -1,0 +1,14 @@
+export enum PaymentMethod {
+    PIX = "PIX",
+    BOLETO = "BOLETO",
+    CREDIT_CARD = "CREDIT_CARD",
+    DEBIT_CARD = "DEBIT_CARD",
+    CASH = "CASH",
+}
+
+export enum PaymentStatus {
+    PENDING = "PENDING",
+    PAID = "PAID",
+    FAILED = "FAILED",
+    CANCELLED = "CANCELLED",
+}
