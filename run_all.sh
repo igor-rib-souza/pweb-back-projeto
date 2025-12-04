@@ -22,7 +22,7 @@ echo "Removendo contêiner do backend antigo (se existir)..."
 podman rm -f api-pweb 2>/dev/null
 
 echo "Construindo imagem do backend..."
-podman build -t pweb-back .
+podman build --no-cache -t pweb-back .
 
 echo "Subindo backend Node.js..."
 podman run -d \

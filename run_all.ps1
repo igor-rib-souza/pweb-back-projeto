@@ -24,7 +24,7 @@ Write-Host "Removendo contêiner do backend antigo (se existir)..."
 podman rm -f api-pweb 2>$null
 
 Write-Host "Construindo imagem do backend..."
-podman build -t pweb-back .
+podman build --no-cache -t pweb-back .
 
 Write-Host "Subindo backend Node.js..."
 podman run -d `
