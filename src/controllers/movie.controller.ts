@@ -13,8 +13,6 @@ export const createMovie = async (req: Request, res: Response) => {
 
     return res.status(201).json(movie);
   } catch (error: any) {
-    // eslint-disable-next-line no-undef
-    console.error(error);
     return res.status(500).json({ error: "Erro ao criar filme" });
   }
 };

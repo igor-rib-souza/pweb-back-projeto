@@ -23,15 +23,15 @@ export const getPaymentById = async (req: Request, res: Response) => {
 };
 
 export const createPayment = async (req: Request, res: Response) => {
-    const { userId, amount, method, status } = req.body;
+    const { userId, rentalId, amount, method, status } = req.body;
 
-    if (!userId || !amount || !method) {
+    if (!userId || !rentalId || !amount || !method) {
         const { status, body } = createErrorResponse(ErrorCode.MISSING_FIELDS, 400);
         return res.status(status).json(body);
     }
 
     try {
-        const newPayment = await paymentService.create({ userId, amount, method, status });
+        const newPayment = await paymentService.create({ userId, rentalId, amount, method, status });
         return res.status(201).json(newPayment);
     } catch (error: any) {
         const { status, body } = createErrorResponse(ErrorCode.SERVER_ERROR, 500);

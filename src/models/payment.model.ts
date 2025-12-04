@@ -8,6 +8,7 @@ interface PaymentAttributes {
     amount: number;
     method: PaymentMethod;
     status: PaymentStatus;
+    rentalId: number;
     createdAt?: Date;
 }
 
@@ -22,6 +23,7 @@ export class Payment
     public amount!: number;
     public method!: PaymentMethod;
     public status!: PaymentStatus;
+    public rentalId!: number;
     public createdAt!: Date;
 }
 
@@ -48,6 +50,11 @@ Payment.init(
             type: DataTypes.ENUM(...Object.values(PaymentStatus)),
             allowNull: false,
             defaultValue: PaymentStatus.PENDING,
+        },
+        rentalId: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            allowNull: false,
+            unique: true,
         },
         createdAt: {
             type: DataTypes.DATE,
