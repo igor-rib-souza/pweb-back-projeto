@@ -22,3 +22,15 @@ export const authenticate = (
     res.status(400).json({ message: "Invalid token." });
   }
 };
+
+export const authorize = (...allowedRoles: string[]) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user;
+
+    if (!user || !allowedRoles.includes(user.role)) {
+      return res.status(403).json({ message: "Acesso negado" });
+    }
+
+    next();
+  };
+};

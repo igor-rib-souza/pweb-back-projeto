@@ -24,9 +24,14 @@ export class UserService {
     email: string;
     cpf: string;
     password: string;
+    role?: "admin" | "user";
   }) {
     const hashedPassword = await bcrypt.hash(data.password, 10);
-    return await User.create({ ...data, password: hashedPassword });
+    return await User.create({
+      ...data,
+      password: hashedPassword,
+      role: data.role ?? "user",
+    });
   }
 
   async update(

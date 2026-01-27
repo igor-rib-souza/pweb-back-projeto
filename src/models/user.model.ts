@@ -7,13 +7,12 @@ interface UserAttributes {
   email: string;
   cpf: string;
   password: string;
+  role: "admin" | "user";
   createdAt?: Date;
 }
 
-interface UserCreationAttributes extends Optional<
-  UserAttributes,
-  "id" | "createdAt"
-> {}
+interface UserCreationAttributes
+  extends Optional<UserAttributes, "id" | "createdAt" | "role"> {}
 
 export class User
   extends Model<UserAttributes, UserCreationAttributes>
@@ -24,6 +23,7 @@ export class User
   public email!: string;
   public cpf!: string;
   public password!: string;
+  public role!: "admin" | "user";
   public createdAt!: Date;
 }
 
@@ -51,6 +51,11 @@ User.init(
     password: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    role: {
+      type: DataTypes.ENUM("admin", "user"),
+      allowNull: false,
+      defaultValue: "user",
     },
     createdAt: {
       type: DataTypes.DATE,

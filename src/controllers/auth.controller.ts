@@ -19,7 +19,7 @@ export const login = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Invalid username or password" });
     }
 
-    const token = generateToken(user.id, user.name);
+    const token = generateToken(user.id, user.name, user.role);
 
     return res.status(200).json({ message: "Login successful", token });
   } catch (err) {
