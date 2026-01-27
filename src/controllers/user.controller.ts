@@ -11,6 +11,24 @@ export const getAllUsers = async (req: Request, res: Response) => {
   return res.status(200).json(users);
 };
 
+export const getUserByUsername = async (req: Request, res: Response) => {
+  const username = req.params.username;
+
+  if (!username) {
+    const { status, body } = createErrorResponse(ErrorCode.MISSING_FIELDS, 422);
+    return res.status(status).json(body);
+  }
+
+  const user = await userService.getByUsername(username);
+
+  if (!user) {
+    const { status, body } = createErrorResponse(ErrorCode.USER_NOT_FOUND, 404);
+    return res.status(status).json(body);
+  }
+
+  return res.status(200).json(user);
+};
+
 export const getUserById = async (req: Request, res: Response) => {
   const id = Number(req.params.id);
   const user = await userService.getById(id);
@@ -24,7 +42,7 @@ export const getUserById = async (req: Request, res: Response) => {
 };
 
 export const createUser = async (req: Request, res: Response) => {
-  const { name, email, cpf } = req.body;
+  const { name, email, cpf, password } = req.body;
 
   if (!name || !email || !cpf) {
     const { status, body } = createErrorResponse(ErrorCode.MISSING_FIELDS, 422);
@@ -34,21 +52,27 @@ export const createUser = async (req: Request, res: Response) => {
   if (!isValidCPF(cpf)) {
     const { status, body } = createErrorResponse(
       ErrorCode.INVALID_FORMAT_CPF,
-      422
+      422,
     );
     return res.status(status).json(body);
   }
 
   try {
-    const newUser = await userService.create({ name, email, cpf });
-    return res.status(201).json(newUser);
+    const newUser = await userService.create({ name, email, cpf, password });
+
+    // Remove o campo password da resposta
+    const { password: _, ...userWithoutPassword } = newUser.get({
+      plain: true,
+    });
+
+    return res.status(201).json(userWithoutPassword);
   } catch (error: any) {
     const message = error?.message ?? "";
 
     if (message.includes("email")) {
       const { status, body } = createErrorResponse(
         ErrorCode.EMAIL_ALREADY_EXISTS,
-        409
+        409,
       );
       return res.status(status).json(body);
     }
@@ -56,7 +80,7 @@ export const createUser = async (req: Request, res: Response) => {
     if (message.includes("cpf")) {
       const { status, body } = createErrorResponse(
         ErrorCode.CPF_ALREADY_EXISTS,
-        409
+        409,
       );
       return res.status(status).json(body);
     }
@@ -73,7 +97,7 @@ export const updateUser = async (req: Request, res: Response) => {
   if (cpf && !isValidCPF(cpf)) {
     const { status, body } = createErrorResponse(
       ErrorCode.INVALID_FORMAT_CPF,
-      422
+      422,
     );
     return res.status(status).json(body);
   }

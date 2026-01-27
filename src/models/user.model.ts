@@ -6,11 +6,14 @@ interface UserAttributes {
   name: string;
   email: string;
   cpf: string;
+  password: string;
   createdAt?: Date;
 }
 
-interface UserCreationAttributes
-  extends Optional<UserAttributes, "id" | "createdAt"> {}
+interface UserCreationAttributes extends Optional<
+  UserAttributes,
+  "id" | "createdAt"
+> {}
 
 export class User
   extends Model<UserAttributes, UserCreationAttributes>
@@ -20,6 +23,7 @@ export class User
   public name!: string;
   public email!: string;
   public cpf!: string;
+  public password!: string;
   public createdAt!: Date;
 }
 
@@ -44,6 +48,10 @@ User.init(
       allowNull: false,
       unique: true,
     },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     createdAt: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
@@ -54,5 +62,5 @@ User.init(
     modelName: "User",
     tableName: "users",
     timestamps: false,
-  }
+  },
 );

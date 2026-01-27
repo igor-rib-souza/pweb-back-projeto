@@ -8,9 +8,11 @@ import categoryRoutes from "./routes/category.routes";
 import rentalRoutes from "./routes/rental.routes";
 import movieRoutes from "./routes/movie.routes";
 import paymentRoutes from "./routes/payment.routes";
+import authRoutes from "./routes/auth.routes";
 
 import { notFoundHandler } from "./middlewares/notFound";
 import { errorHandler } from "./middlewares/errorHandler";
+import { authenticate } from "./middlewares/authMiddleware";
 
 const app = express();
 
@@ -23,11 +25,13 @@ app.get("/", (_req, res) => {
 });
 
 app.use("/users", userRoutes);
-app.use("/category", categoryRoutes);
-app.use("/teapot", teapotRoutes);
-app.use("/rental", rentalRoutes);
-app.use("/movie", movieRoutes);
-app.use("/payments", paymentRoutes);
+app.use("/auth", authRoutes);
+
+app.use("/category", authenticate, categoryRoutes);
+app.use("/teapot", authenticate, teapotRoutes);
+app.use("/rental", authenticate, rentalRoutes);
+app.use("/movie", authenticate, movieRoutes);
+app.use("/payments", authenticate, paymentRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
