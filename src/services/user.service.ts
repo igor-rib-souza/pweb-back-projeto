@@ -2,6 +2,7 @@ import { User } from "../models/user.model";
 import bcrypt from "bcryptjs";
 
 //TODO: talvez melhorar a lógica usada para remover a senha do usuário
+//TODO: adicionar tratamento de erro no login/criar usuário para novos erros devido a adição da senha
 export class UserService {
   async getAll() {
     return await User.findAll({
