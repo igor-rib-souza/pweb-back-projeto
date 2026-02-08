@@ -20,6 +20,10 @@ export class UserService {
     });
   }
 
+  async getByEmail(email: string) {
+    return User.findOne({ where: { email } });
+  }
+
   async create(data: {
     name: string;
     email: string;

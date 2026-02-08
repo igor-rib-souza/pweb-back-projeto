@@ -28,7 +28,7 @@ export const authorize = (...allowedRoles: string[]) => {
     const user = req.user;
 
     if (!user || !allowedRoles.includes(user.role)) {
-      return res.status(403).json({ message: "Acesso negado" });
+      return res.status(403).json({ message: "Acesso negado, seu usuário não possui a role necessária" });
     }
 
     next();
