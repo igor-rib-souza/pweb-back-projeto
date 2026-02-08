@@ -8,11 +8,14 @@ interface MovieAttributes {
   overview: string;
   posterPath: string | null;
   releaseDate: string;
+  categoryId: number;
   createdAt?: Date;
 }
 
-interface MovieCreationAttributes
-  extends Optional<MovieAttributes, "id" | "title" | "overview" | "posterPath" | "releaseDate" | "createdAt"> {}
+interface MovieCreationAttributes extends Optional<
+  MovieAttributes,
+  "id" | "title" | "overview" | "posterPath" | "releaseDate" | "createdAt"
+> {}
 
 export class Movie
   extends Model<MovieAttributes, MovieCreationAttributes>
@@ -24,6 +27,7 @@ export class Movie
   public overview!: string;
   public posterPath!: string;
   public releaseDate!: string;
+  public categoryId!: number;
   public createdAt!: Date;
 }
 
@@ -54,15 +58,23 @@ Movie.init(
       type: DataTypes.STRING(20),
       allowNull: false,
     },
+    categoryId: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false,
+      references: {
+        model: "categories",
+        key: "id",
+      },
+    },
     createdAt: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
-    }
+    },
   },
   {
     sequelize,
     modelName: "Movie",
     tableName: "movies",
     timestamps: false,
-  }
+  },
 );

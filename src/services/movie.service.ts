@@ -8,12 +8,12 @@ export class MovieService {
 
   async fetchMovieFromTMDB(tmdbId: number): Promise<TMDBMovieResponse> {
     const response = await axios.get<TMDBMovieResponse>(
-      `${this.TMDB_URL}${tmdbId}?api_key=${this.API_KEY}&language=pt-BR`
+      `${this.TMDB_URL}${tmdbId}?api_key=${this.API_KEY}&language=pt-BR`,
     );
     return response.data;
   }
 
-  async createMovie(tmdbId: number) {
+  async createMovie(tmdbId: number, categoryId: number) {
     const tmdbData = await this.fetchMovieFromTMDB(tmdbId);
 
     return await Movie.create({
@@ -22,6 +22,7 @@ export class MovieService {
       overview: tmdbData.overview,
       posterPath: tmdbData.poster_path,
       releaseDate: tmdbData.release_date,
+      categoryId,
     });
   }
 
@@ -31,5 +32,11 @@ export class MovieService {
 
   async getById(id: number) {
     return await Movie.findByPk(id);
+  }
+
+  async getByCategoryId(categoryId: number) {
+    return await Movie.findAll({
+      where: { categoryId },
+    });
   }
 }
