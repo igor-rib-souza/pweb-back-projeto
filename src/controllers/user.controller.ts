@@ -3,6 +3,7 @@ import { UserService } from "../services/user.service";
 import { ErrorCode } from "../constants/errorCodes";
 import { createErrorResponse } from "../utils/errorUtils";
 import { isValidCPF } from "../utils/utils";
+import { UniqueConstraintError } from "sequelize";
 
 const userService = new UserService();
 
@@ -60,30 +61,32 @@ export const createUser = async (req: Request, res: Response) => {
   try {
     const newUser = await userService.create({ name, email, cpf, password });
 
-    // Remove o campo password da resposta
     const { password: _, ...userWithoutPassword } = newUser.get({
       plain: true,
     });
 
     return res.status(201).json(userWithoutPassword);
   } catch (error: any) {
-    const message = error?.message ?? "";
+    if (error instanceof UniqueConstraintError) {
+      const field = error.errors?.[0]?.path;
 
-    if (message.includes("email")) {
-      const { status, body } = createErrorResponse(
-        ErrorCode.EMAIL_ALREADY_EXISTS,
-        409,
-      );
-      return res.status(status).json(body);
+      if (field === "email") {
+        const { status, body } = createErrorResponse(
+          ErrorCode.EMAIL_ALREADY_EXISTS,
+          409,
+        );
+        return res.status(status).json(body);
+      }
+
+      if (field === "cpf") {
+        const { status, body } = createErrorResponse(
+          ErrorCode.CPF_ALREADY_EXISTS,
+          409,
+        );
+        return res.status(status).json(body);
+      }
     }
 
-    if (message.includes("cpf")) {
-      const { status, body } = createErrorResponse(
-        ErrorCode.CPF_ALREADY_EXISTS,
-        409,
-      );
-      return res.status(status).json(body);
-    }
 
     const { status, body } = createErrorResponse(ErrorCode.SERVER_ERROR, 500);
     return res.status(status).json(body);
