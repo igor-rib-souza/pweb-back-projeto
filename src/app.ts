@@ -27,10 +27,10 @@ app.get("/", (_req, res) => {
 app.use("/users", userRoutes);
 app.use("/auth", authRoutes);
 
-app.use("/category", authenticate, categoryRoutes);
-app.use("/teapot", authenticate, teapotRoutes);
+app.use("/category", categoryRoutes);
+app.use("/teapot", teapotRoutes);
 app.use("/rental", authenticate, rentalRoutes);
-app.use("/movie", authenticate, movieRoutes);
+app.use("/movie", movieRoutes);
 app.use("/payments", authenticate, paymentRoutes);
 
 app.use(notFoundHandler);

@@ -43,7 +43,7 @@ export const getUserById = async (req: Request, res: Response) => {
 };
 
 export const createUser = async (req: Request, res: Response) => {
-  const { name, email, cpf, password } = req.body;
+  const { name, email, cpf, password, role } = req.body;
 
   if (!name || !email || !cpf) {
     const { status, body } = createErrorResponse(ErrorCode.MISSING_FIELDS, 422);
@@ -59,7 +59,7 @@ export const createUser = async (req: Request, res: Response) => {
   }
 
   try {
-    const newUser = await userService.create({ name, email, cpf, password });
+    const newUser = await userService.create({ name, email, cpf, password, role });
 
     const { password: _, ...userWithoutPassword } = newUser.get({
       plain: true,
@@ -86,7 +86,6 @@ export const createUser = async (req: Request, res: Response) => {
         return res.status(status).json(body);
       }
     }
-
 
     const { status, body } = createErrorResponse(ErrorCode.SERVER_ERROR, 500);
     return res.status(status).json(body);
