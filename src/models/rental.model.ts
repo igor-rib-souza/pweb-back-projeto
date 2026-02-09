@@ -8,24 +8,31 @@ interface RentalAttributes {
   id: number;
   userId: number;
   movieId: number;
-  rentedAt: Date;
+  startDate?: Date;
   payment?: Payment;
-  expiresAt: Date;
+  endDate?: Date;
+  rentedAt?: Date;
   extended: boolean;
+  days: number;
 }
 
-interface RentalCreationAttributes
-  extends Optional<RentalAttributes, "id" | "extended"> { }
+interface RentalCreationAttributes extends Optional<
+  RentalAttributes,
+  "id" | "extended"
+> {}
 
 export class Rental
   extends Model<RentalAttributes, RentalCreationAttributes>
-  implements RentalAttributes {
+  implements RentalAttributes
+{
   public id!: number;
   public userId!: number;
   public movieId!: number;
+  public startDate!: Date;
+  public endDate!: Date;
   public rentedAt!: Date;
-  public expiresAt!: Date;
   public extended!: boolean;
+  public days!: number;
 }
 
 Rental.init(
@@ -43,17 +50,25 @@ Rental.init(
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
     },
+    startDate: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    endDate: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
     rentedAt: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
     },
-    expiresAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
     extended: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
+    },
+    days: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false,
     },
   },
   {
@@ -61,7 +76,7 @@ Rental.init(
     modelName: "Rental",
     tableName: "rentals",
     timestamps: false,
-  }
+  },
 );
 
 // Associações

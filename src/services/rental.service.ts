@@ -1,6 +1,7 @@
 import { Rental } from "../models/rental.model";
 import { User } from "../models/user.model";
 import { Movie } from "../models/movie.model";
+import { Payment } from "../models/payment.model";
 
 export class RentalService {
   async create(userId: number, movieId: number, days: number) {
@@ -17,8 +18,7 @@ export class RentalService {
     return await Rental.create({
       userId,
       movieId,
-      rentedAt,
-      expiresAt,
+      days,
     });
   }
 
@@ -28,7 +28,7 @@ export class RentalService {
     if (!rental) return null;
     if (rental.extended) return "already_extended";
 
-    rental.expiresAt.setDate(rental.expiresAt.getDate() + extraDays);
+    rental.endDate.setDate(rental.endDate.getDate() + extraDays);
     rental.extended = true;
 
     await rental.save();
@@ -38,19 +38,43 @@ export class RentalService {
   async getByUser(userId: number) {
     return Rental.findAll({
       where: { userId },
-      include: [{ model: Movie, as: "movie" }],
+      include: [
+        { model: Movie, as: "movie" },
+        {
+          model: Payment,
+          as: "payment",
+          attributes: ["status"],
+          required: false,
+        },
+      ],
     });
   }
 
   async getById(id: number) {
     return Rental.findByPk(id, {
-      include: [{ model: Movie, as: "movie" }],
+      include: [
+        { model: Movie, as: "movie" },
+        {
+          model: Payment,
+          as: "payment",
+          attributes: ["status"],
+          required: false,
+        },
+      ],
     });
   }
 
   async getAll() {
     return Rental.findAll({
-      include: [{ model: Movie, as: "movie" }],
+      include: [
+        { model: Movie, as: "movie" },
+        {
+          model: Payment,
+          as: "payment",
+          attributes: ["status"],
+          required: false,
+        },
+      ],
     });
   }
 }
