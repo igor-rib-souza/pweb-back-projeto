@@ -50,4 +50,38 @@ describe("UserService", () => {
     const result = await service.delete(999);
     expect(result).toBe(false);
   });
+
+  it("should throw error if email is invalid when creating user", async () => {
+    const invalidUser = {
+      name: "Teste",
+      email: "email_invalido",
+      cpf: "00000000000",
+      password: "senha",
+    };
+
+    vi.spyOn(User, "create").mockImplementation(() => {
+      throw new Error("Validation error: invalid email");
+    });
+
+    await expect(service.create(invalidUser)).rejects.toThrow(/invalid email/i);
+  });
+
+  it("should throw an error when trying to create a user with a duplicated CPF", async () => {
+    const duplicatedCpfUser = {
+      name: "Usuário Existente",
+      email: "existente@email.com",
+      cpf: "12345678900",
+      password: "senhaSegura",
+    };
+
+    vi.spyOn(User, "create").mockImplementation(() => {
+      const err = new Error("Validation error: duplicate CPF");
+      (err as any).name = "SequelizeUniqueConstraintError";
+      throw err;
+    });
+
+    await expect(service.create(duplicatedCpfUser)).rejects.toThrow(
+      /duplicate CPF/i,
+    );
+  });
 });

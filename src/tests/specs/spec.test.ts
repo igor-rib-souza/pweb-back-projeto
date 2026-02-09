@@ -65,6 +65,31 @@ describe("Rental and Payment basic behavior", () => {
     expect(res.status).toBe(201);
     expect(res.body.status).toBe(PaymentStatus.PENDING);
   });
+
+  it("should return 404 if movie does not exist", async () => {
+    vi.spyOn(User, "findByPk").mockResolvedValue({ id: 1 } as any);
+    vi.spyOn(Movie, "findByPk").mockResolvedValue(null); // Simula filme inexistente
+
+    const res = await request(app)
+      .post("/rental")
+      .send({ userId: 1, movieId: 999, days: 3 });
+
+    expect(res.status).toBe(404);
+  });
+
+  it("should return 400 if rental already has a payment", async () => {
+    vi.spyOn(Rental, "findByPk").mockResolvedValue({
+      id: 1,
+      payment: { id: 999 }, // Simula pagamento já existente
+    } as any);
+
+    const res = await request(app)
+      .post("/payments")
+      .send({ rentalId: 1, method: "PIX", amount: 20, userId: 1 });
+
+    expect(res.status).toBe(400);
+    expect(res.body.message).toMatch(/payment already exists/i);
+  });
 });
 
 describe("Payment update behavior", () => {

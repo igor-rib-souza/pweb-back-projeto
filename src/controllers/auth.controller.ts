@@ -21,7 +21,14 @@ export const login = async (req: Request, res: Response) => {
 
     const token = generateToken(user.id, user.role);
 
-    return res.status(200).json({ message: "Login successful", token, user });
+    const userData = user.get({ plain: true });
+    const { password: _, ...userWithoutPassword } = userData;
+
+    return res.status(200).json({
+      message: "Login successful",
+      token,
+      user: userWithoutPassword,
+    });
   } catch (err) {
     return res.status(500).json({ message: "Error logging in", error: err });
   }
